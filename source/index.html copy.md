@@ -1,8 +1,8 @@
 ---
-title: Loceye Documentation
+title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
-  - responses|requests
+  - responses
   
 
 toc_footers:
@@ -37,83 +37,92 @@ an Ajax POST request should be done.
 
 ```responses
 Request Format:
-{"x":"<Width of screen>",
+{"process":"start", "x":"<Width of screen>",
      "y":"<Height of screen>"}
 
 Response Format :
 
-{"error":"<Error Code>","uuid":"<UUID4 code>","duration":<Duration in seconds>}
+{"error":"<Error Code>","uuid":"<UUID4 code>"}
 
 ```
 
 When landing to the survey url with the format `https://www.loceye.io/survey/<SurveyID>` a GET request is done.
 
+Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
 
+`Authorization: meowmeowmeow`
 
+<aside class="notice">
+You must replace <code>meowmeowmeow</code> with your personal API key.
+</aside>
 
+# Kittens
 
+## Get All Kittens
 
-# Experiment Page
+```ruby
+require 'kittn'
 
-## Request Link
+api = Kittn::APIClient.authorize!('meowmeowmeow')
+api.kittens.get
+```
 
+```python
+import kittn
 
+api = kittn.authorize('meowmeowmeow')
+api.kittens.get()
+```
 
-> process "start"  Response:
+```shell
+curl "http://example.com/api/kittens"
+  -H "Authorization: meowmeowmeow"
+```
+
+```javascript
+const kittn = require('kittn');
+
+let api = kittn.authorize('meowmeowmeow');
+let kittens = api.kittens.get();
+```
+
+> The above command returns JSON structured like this:
 
 ```json
+[
   {
-    "error": <Error Code>,
-    "imgURL": <URL of the survey Image to display>
-  }
-  " Note: If error code is 1 then no URL will be presented at the response. ""
-```
-> process "calib"  Request:
-
-```json
+    "id": 1,
+    "name": "Fluffums",
+    "breed": "calico",
+    "fluffiness": 6,
+    "cuteness": 7
+  },
   {
-    "process":"calib",
-    "x":<position of the calibration point in X axis>,
-    "y":<position of the calibration point in Y axis>,
-    "imgData":<imgBase64 formatted>
+    "id": 2,
+    "name": "Max",
+    "breed": "unknown",
+    "fluffiness": 5,
+    "cuteness": 10
   }
-```
-> process "run"  Request:
-
-```json
-  
- {
-    "process":"run",
-    "imgData":<imgBase64 formatted>
-  }
-
-```
-> process "finish"  Request:
-
-```json
-  
-  {
-    "process":"finish"
-  }
-
+]
 ```
 
-`POST https://www.loceye.io/ajax/<UUID>`
+This endpoint retrieves all kittens.
 
+### HTTP Request
+
+`GET http://example.com/api/kittens`
 
 ### Query Parameters
 
+Parameter | Default | Description
+--------- | ------- | -----------
+include_cats | false | If set to true, the result will also include cats.
+available | true | If set to false, the result will include kittens that have already been adopted.
 
-
-Parameter |  Description
---------- |  -----------
-process | Proper Values: start,calib, run, finish.
-xPoint | At Calibration post gives the x coordinate of the point.
-yPoint | At Calibration post gives the y coordinate of the point.
-imgBase64 | The base64 encoded image of the user.
-
-
-
+<aside class="success">
+Remember — a happy kitten is an authenticated kitten!
+</aside>
 
 ## Get a Specific Kitten
 
@@ -218,13 +227,4 @@ This endpoint deletes a specific kitten.
 Parameter | Description
 --------- | -----------
 ID | The ID of the kitten to delete
-
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
 
